@@ -317,30 +317,6 @@ FocusScope {
     ColumnLayout {
         anchors.fill: parent
 
-        HdrImageToolbar {
-            id: hdrImageToolbar
-            anchors.margins: 0
-            visible: displayImageToolBarAction.checked && displayImageToolBarAction.enabled
-            Layout.fillWidth: true
-            onVisibleChanged: {
-                resetDefaultValues()
-            }
-            colorPickerVisible: {
-                return true
-            }
-
-            colorRGBA: {
-                if (!floatImageViewerLoader.item ||
-                    floatImageViewerLoader.item.status !== Image.Ready) {
-                    return null
-                }
-                if (floatImageViewerLoader.item.containsMouse === false) {
-                    return null
-                }
-                var pix = floatImageViewerLoader.item.pixelValueAt(Math.floor(floatImageViewerLoader.item.mouseX), Math.floor(floatImageViewerLoader.item.mouseY))
-                return pix
-            }
-        }
 
         LensDistortionToolbar {
             id: lensDistortionImageToolbar
@@ -412,9 +388,6 @@ FocusScope {
                             // Note: It does not work to use previously created component, so we re-create it with setSource.
                             setSource("FloatImage.qml", {
                                 'source':  Qt.binding(function() { return getImageFile() }),
-                                'gamma': Qt.binding(function() { return hdrImageToolbar.gammaValue }),
-                                'gain': Qt.binding(function() { return hdrImageToolbar.gainValue }),
-                                'channelModeString': Qt.binding(function() { return hdrImageToolbar.channelModeValue }),
                                 'isPrincipalPointsDisplayed' : Qt.binding(function() { return lensDistortionImageToolbar.displayPrincipalPoint }),
                                 'surface.displayGrid' :  Qt.binding(function() { return lensDistortionImageToolbar.visible && lensDistortionImageToolbar.displayGrid }),
                                 'surface.gridOpacity' : Qt.binding(function() { return lensDistortionImageToolbar.opacityValue }),
