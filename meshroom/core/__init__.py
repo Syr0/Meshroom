@@ -341,12 +341,6 @@ nodesFolders = [os.path.join(meshroomFolder, 'nodes')] + additionalNodesPath
 for f in nodesFolders:
     loadAllNodes(folder=f)
 
-# - Submitters
-subs = loadSubmitters(os.environ.get("MESHROOM_SUBMITTERS_PATH", meshroomFolder), 'submitters')
-
-for sub in subs:
-    registerSubmitter(sub())
-
 # Load pipeline templates: check in the default folder and any folder the user might have
 # added to the environment variable
 additionalPipelinesPath = os.environ.get("MESHROOM_PIPELINE_TEMPLATES_PATH", "").split(os.pathsep)
