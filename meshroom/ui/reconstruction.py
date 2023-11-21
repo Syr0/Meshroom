@@ -351,7 +351,7 @@ class Reconstruction(UIGraph):
     @Slot()
     @Slot(str)
     def new(self, pipeline=None):
-        p = pipeline if pipeline != None else self._defaultPipeline
+        p = pipeline if pipeline is not None else self._defaultPipeline
         """ Create a new pipeline. """
         # Lower the input and the dictionary keys to make sure that all input types can be found:
         # - correct pipeline name but the case does not match (e.g. panoramaHDR instead of panoramaHdr)

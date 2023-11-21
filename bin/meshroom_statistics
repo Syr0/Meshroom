@@ -2,9 +2,7 @@
 import argparse
 import os
 import sys
-from pprint import pprint
 from collections import defaultdict
-from collections.abc import Iterable
 
 from meshroom.core import graph as pg
 
