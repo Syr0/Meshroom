@@ -15,7 +15,6 @@ from meshroom.core.taskManager import TaskManager
 from meshroom.ui import components
 from meshroom.ui.components.clipboard import ClipboardHelper
 from meshroom.ui.components.filepath import FilepathHelper
-from meshroom.ui.components.scene3D import Scene3DHelper, Transformations3DHelper
 from meshroom.ui.components.thumbnail import ThumbnailCache
 from meshroom.ui.palette import PaletteManager
 from meshroom.ui.reconstruction import Reconstruction
@@ -152,8 +151,6 @@ class MeshroomApp(QApplication):
         #  - declaring them as singleton in qmldir file causes random crash at exit
         # => expose them as context properties instead
         self.engine.rootContext().setContextProperty("Filepath", FilepathHelper(parent=self))
-        self.engine.rootContext().setContextProperty("Scene3DHelper", Scene3DHelper(parent=self))
-        self.engine.rootContext().setContextProperty("Transformations3DHelper", Transformations3DHelper(parent=self))
         self.engine.rootContext().setContextProperty("Clipboard", ClipboardHelper(parent=self))
         self.engine.rootContext().setContextProperty("ThumbnailCache", ThumbnailCache(parent=self))
 
