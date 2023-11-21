@@ -1,24 +1,22 @@
-__version__ = "1.1"
+__version__ = "1.0"
 
 from meshroom.core import desc
-
 import os.path
 
-
-class PanoramaPrepareImages(desc.AVCommandLineNode):
-    commandLine = 'aliceVision_panoramaPrepareImages {allParams}'
+class Example(desc.AVCommandLineNode):
+    commandLine = 'Example {allParams}'
     size = desc.DynamicNodeSize('input')
 
-    category = 'Panorama HDR'
+    category = 'Utils'
     documentation = '''
-Prepare images for Panorama pipeline: ensures that images orientations are coherent.
+Assumes the input SfMData describes a set of cameras capturing a scene at a common time. Transformd the set of cameras into a rig of cameras.
 '''
 
     inputs = [
         desc.File(
             name="input",
-            label="Input",
-            description="SfMData file.",
+            label="SfMData",
+            description="Input SfMData file.",
             value="",
             uid=[0],
         ),
@@ -30,15 +28,15 @@ Prepare images for Panorama pipeline: ensures that images orientations are coher
             values=["fatal", "error", "warning", "info", "debug", "trace"],
             exclusive=True,
             uid=[],
-        ),
+        )
     ]
 
     outputs = [
         desc.File(
             name="output",
             label="SfMData",
-            description="Output SfMData file.",
-            value=lambda attr: desc.Node.internalFolder + os.path.basename(attr.node.input.value),
+            description="Path to the output SfM file (in SfMData format).",
+            value=lambda attr: desc.Node.internalFolder + "sfmData.sfm",
             uid=[],
         ),
     ]

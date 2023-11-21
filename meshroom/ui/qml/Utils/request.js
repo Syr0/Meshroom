@@ -1,4 +1,3 @@
-.pragma library
 
 /**
  * Perform 'GET' request on url, and bind 'callback' to onreadystatechange (with XHR object as parameter).
