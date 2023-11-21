@@ -14,7 +14,7 @@ Repeater {
     property var features
     /// Tracks
     property var tracks
-    /// SfMData
+    /// #SfMData
     property var sfmData
 
     /// The list of describer types to load

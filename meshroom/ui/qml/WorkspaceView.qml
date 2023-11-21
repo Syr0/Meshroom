@@ -30,17 +30,6 @@ Item {
 
     Connections {
         target: reconstruction
-
-        function onSfmChanged() { viewSfM() }
-        function onSfmReportChanged() { viewSfM() }
-    }
-    Component.onCompleted: viewSfM()
-
-    // Load reconstruction's current SfM file
-    function viewSfM() {
-        var activeNode = _reconstruction.activeNodes ? _reconstruction.activeNodes.get('sfm').node : null
-        if (!activeNode)
-            return
     }
 
     SystemPalette { id: activePalette }
