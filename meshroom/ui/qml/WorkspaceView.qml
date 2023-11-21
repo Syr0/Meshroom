@@ -5,7 +5,6 @@ import QtQuick.Layouts 1.11
 import Qt.labs.platform 1.0 as Platform
 import ImageGallery 1.0
 import Viewer 1.0
-import Viewer3D 1.0
 import MaterialIcons 2.2
 import Controls 1.0
 import Utils 1.0
