@@ -260,44 +260,6 @@ FocusScope {
         return undefined
     }
 
-    function buildOrderedSequence(path_template) {
-        // Resolve the path template on the sequence of viewpoints
-        // ordered by path
-
-        let objs = []
-        for (let i = 0; i < _reconstruction.viewpoints.count; i++) {
-            objs.push(_reconstruction.viewpoints.at(i))
-        }
-        objs.sort((a, b) => { return a.childAttribute("path").value < b.childAttribute("path").value ? -1 : 1; })
-
-        let seq = [];
-        for (let i = 0; i < objs.length; i++) {
-            seq.push(resolve(path_template, objs[i]))
-        }
-
-        return seq
-    }
-
-    function getSequence() {
-        // Entry point for getting the current image sequence
-
-        if (useExternal) {
-            return []
-        }
-
-        if (_reconstruction && (!displayedNode || outputAttribute.name == "gallery")) {
-            return buildOrderedSequence("<PATH>")
-        }
-
-        if (_reconstruction) {
-            let attr = getAttributeByName(displayedNode, outputAttribute.name)
-            let path_template = attr ? attr.value : ""
-            return buildOrderedSequence(path_template)
-        }
-
-        return []
-    }
-
     onDisplayedNodeChanged: {
         if (!displayedNode) {
             root.source = ""
