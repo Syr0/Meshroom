@@ -972,7 +972,7 @@ ApplicationWindow {
 
                 function viewNode(node, mouse) {
                     // 2D viewer
-                    viewer2D.tryLoadNode(node)
+                    bitplaneViewer.tryLoadNode(node)
 
                     // 3D viewer
                     for (var i = 0; i < node.attributes.count; i++) {

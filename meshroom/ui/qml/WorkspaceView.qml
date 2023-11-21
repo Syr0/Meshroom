@@ -58,14 +58,14 @@ Item {
         }
 
         Panel {
-            title: "Image Viewer"
+            title: "Bitplane Viewer"
             visible: settings_UILayout.showImageViewer
             implicitWidth: Math.round(parent.width * 0.35)
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.minimumWidth: 50
-            loading: viewer2D.loadingModules.length > 0
-            loadingText: loading ? "Loading " + viewer2D.loadingModules : ""
+            loading: bitplaneViewer.loadingModules.length > 0
+            loadingText: loading ? "Loading " + bitplaneViewer.loadingModules : ""
 
             headerBar: RowLayout {
                 MaterialToolButton {
@@ -84,14 +84,14 @@ Item {
                             text: "Display HDR Toolbar"
                             checkable: true
                             checked: true
-                            enabled: viewer2D.useFloatImageViewer
+                            enabled: bitplaneViewer.useFloatImageViewer
                         }
                         Action {
                             id: displayLensDistortionToolBarAction
                             text: "Display Lens Distortion Toolbar"
                             checkable: true
                             checked: true
-                            enabled: viewer2D.useLensDistortionViewer
+                            enabled: bitplaneViewer.useLensDistortionViewer
                         }
                         Action {
                             id: enable8bitViewerAction
@@ -104,7 +104,7 @@ Item {
             }
 
             Viewer2D {
-                id: viewer2D
+                id: bitplaneViewer
                 anchors.fill: parent
 
                 viewIn3D: root.load3DMedia
@@ -113,7 +113,7 @@ Item {
                     anchors.fill: parent
                     keys: ["text/uri-list"]
                     onDropped: {
-                        viewer2D.loadExternal(drop.urls[0]);
+                        bitplaneViewer.loadExternal(drop.urls[0]);
                     }
                 }
                 Rectangle {
