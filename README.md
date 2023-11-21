@@ -42,10 +42,6 @@ Detailed tutorial with a focus on the features of the 2019.1 release.
 
 Overall presentation of the photogrammetry practice with Meshroom.
 
-* [How to 3D Photoscan Easy and Free! by ](https://www.youtube.com/watch?v=k4NTf0hMjtY) by [CG Geek](https://www.youtube.com/channel/UCG8AxMVa6eutIGxrdnDxWpQ)
-
-Overall presentation of the protogrammetry practice with Meshroom and detailed presentation how to do the retolopogy in Blender.
-
 * [Meshroom Survival Guide](https://www.youtube.com/watch?v=eiEaHLNJJ94) by [Moviola](https://moviola.com)
 
 Presentation of the Meshroom software with a focus on using it for Match Moving.
@@ -62,7 +58,6 @@ In a standard precompiled version of Meshroom, you can also directly add custom 
 ### Custom Nodes
 
 You can create custom nodes in python and make them available in Meshroom using the `MESHROOM_NODES_PATH` environment variable.
-[Here is an example](meshroom/nodes/blender/ScenePreview.py) to launch a Blender rendering from Meshroom.
 In a standard precompiled version of Meshroom, you can also directly add custom nodes in `lib/meshroom/nodes`.
 To be recognized by Meshroom, a custom folder with nodes should be a Python module (an `__init__.py` file is needed).
 

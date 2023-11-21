@@ -54,8 +54,6 @@ Based on [AliceVision 3.1.0](https://github.com/alicevision/AliceVision/tree/v3.
 - [ui] Display an icon on nodes that have viewable 3D outputs [PR](https://github.com/alicevision/Meshroom/pull/2052)
 - [pipelines] cameraTracking: change StructureFromMotion parameters [PR](https://github.com/alicevision/Meshroom/pull/2055)
 - [nodes] Harmonize and improve nodes descriptions  [PR](https://github.com/alicevision/Meshroom/pull/2063)
-- [blender] preview: use cycles render engine [PR](https://github.com/alicevision/Meshroom/pull/2064)
-- [blender] preview: occlusions in wireframe shading [PR](https://github.com/alicevision/Meshroom/pull/2071)
 
 ### Bugfixes, Build and Documentation
 
@@ -64,16 +62,13 @@ Based on [AliceVision 3.1.0](https://github.com/alicevision/AliceVision/tree/v3.
 - [bin] Fix all the scripts that had errors [PR](https://github.com/alicevision/Meshroom/pull/1995)
 - [ui] ImageGallery: Reset viewpoints and intrinsics when removing all the images [PR](https://github.com/alicevision/Meshroom/pull/2031)
 - [nodes] CameraInit: access intrinsic properties safely [PR](https://github.com/alicevision/Meshroom/pull/2040)
-- [blender] preview: handle background image not found [PR](https://github.com/alicevision/Meshroom/pull/2045)
 - Bump requests from 2.22.0 to 2.31.0 [PR](https://github.com/alicevision/Meshroom/pull/2018)
-- [blender] preview: clear loaded images to avoid memory leak [PR](https://github.com/alicevision/Meshroom/pull/2053)
 - Fix submit through simpleFarm [PR](https://github.com/alicevision/Meshroom/pull/2054)
 - [ui] thumbnails: fallback if thumbnailDir could not be created [PR](https://github.com/alicevision/Meshroom/pull/2057)
 - [core] fix transitive reduction when submitting graph [PR](https://github.com/alicevision/Meshroom/pull/2058)
 - [doc] Update readme for custom pipelines and nodes [PR](https://github.com/alicevision/Meshroom/pull/2009)
 - [core] Include the node's type in the UID computation [PR](https://github.com/alicevision/Meshroom/pull/2038)
 - [doc] INSTALL: Add info about the sphere detection model [PR](https://github.com/alicevision/Meshroom/pull/2067)
-- [blender] preview: use Freestyle for line art shading [PR](https://github.com/alicevision/Meshroom/pull/2074)
 - Set `ALICEVISION_SPHERE_DETECTION_MODEL` variable during the initialisation [PR](https://github.com/alicevision/Meshroom/pull/2083)
 
 ### Contributors
@@ -131,7 +126,6 @@ Based on [AliceVision 3.0.0](https://github.com/alicevision/AliceVision/tree/v3.
 - Depth map refactoring [PR](https://github.com/alicevision/Meshroom/pull/680)
 - Draft Reconstruction pipeline [PR](https://github.com/alicevision/Meshroom/pull/1489)
 - [ui] Add filters to image gallery [PR](https://github.com/alicevision/Meshroom/pull/1500)
-- [nodes] New node "RenderAnimatedCamera" using blender API [PR](https://github.com/alicevision/Meshroom/pull/1432)
 - New node to import known poses for various file formats [PR](https://github.com/alicevision/Meshroom/pull/1475)
 - New ImageMasking and MeshMasking nodes [PR](https://github.com/alicevision/Meshroom/pull/1483)
 - Create Split360Images Node [PR](https://github.com/alicevision/Meshroom/pull/1464)
@@ -406,7 +400,6 @@ Release Notes Summary:
 Full Release Notes:
 
  - Move to PySide2 / Qt 5.13
- - SfMDataIO: Change root nodes (XForms instead of untyped objects) of Alembic SfMData for better interoperability with other 3D graphics applications (in particular Blender and Houdini).
  - Improve performance of log display and node status update. [PR](https://github.com/alicevision/meshroom/pull/466) [PR](https://github.com/alicevision/meshroom/pull/548)
  - Viewer3D: Add support for vertex-colored meshes. [PR](https://github.com/alicevision/meshroom/pull/550)
  - New pipeline input for meshroom_photogrammetry command line and minor fixes to the input arguments. [PR](https://github.com/alicevision/meshroom/pull/567) [PR](https://github.com/alicevision/meshroom/pull/577)
