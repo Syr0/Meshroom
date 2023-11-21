@@ -45,7 +45,7 @@ build_exe_options = {
     "includes": [
         "idna.idnadata",  # Dependency needed by SketchfabUpload node, but not detected by cx_Freeze
     ],
-    "include_files": ["CHANGES.md", "COPYING.md", "LICENSE-MPL2.md", "README.md"]
+    "include_files": ["LICENSE-MPL2.md"]
 }
 if os.path.isdir(os.path.join(currentDir, "tractor")):
     build_exe_options["packages"].append("tractor")
