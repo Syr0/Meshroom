@@ -317,14 +317,6 @@ FocusScope {
     ColumnLayout {
         anchors.fill: parent
 
-
-        LensDistortionToolbar {
-            id: lensDistortionImageToolbar
-            anchors.margins: 0
-            visible: displayLensDistortionToolBarAction.checked && displayLensDistortionToolBarAction.enabled
-            Layout.fillWidth: true
-        }
-
         // Image
         Item {
             id: imgLayout
@@ -388,11 +380,6 @@ FocusScope {
                             // Note: It does not work to use previously created component, so we re-create it with setSource.
                             setSource("FloatImage.qml", {
                                 'source':  Qt.binding(function() { return getImageFile() }),
-                                'isPrincipalPointsDisplayed' : Qt.binding(function() { return lensDistortionImageToolbar.displayPrincipalPoint }),
-                                'surface.displayGrid' :  Qt.binding(function() { return lensDistortionImageToolbar.visible && lensDistortionImageToolbar.displayGrid }),
-                                'surface.gridOpacity' : Qt.binding(function() { return lensDistortionImageToolbar.opacityValue }),
-                                'surface.gridColor' : Qt.binding(function() { return lensDistortionImageToolbar.color }),
-                                'surface.subdivisions' : Qt.binding(function() { return root.useFloatImageViewer ? 1 : lensDistortionImageToolbar.subdivisionsValue }),
                                 'viewerTypeString': Qt.binding(function() { return displayLensDistortionViewer.checked ? "distortion" : "hdr" }),
                                 'sfmRequired': Qt.binding(function() { return displayLensDistortionViewer.checked ? true : false }),
                                 'surface.msfmData': Qt.binding(function() { return (msfmDataLoader.status === Loader.Ready && msfmDataLoader.item != null && msfmDataLoader.item.status === 2) ? msfmDataLoader.item : null }),
