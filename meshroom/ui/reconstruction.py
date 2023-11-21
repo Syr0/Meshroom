@@ -719,16 +719,18 @@ class Reconstruction(UIGraph):
         This method allows to reduce process time by doing it on Python side.
         """
         filesByType = self.getFilesByTypeFromDrop(drop)
+
         if filesByType.audio:
-            self._workerThreads.apply_async(func=self.ImportAudioSync, args=(filesByType.audio, cameraInit,))
-        if filesByType.binary:
+            self._workerThreads.apply_async(func=self.importImagesSync, args=(filesByType.audio, cameraInit,))
+        if filesByType.asciiBinary:
+
             boundingBox = self.layout.boundingBox()
             keyframeNode = self.addNewNode("KeyframeSelection", position=Position(boundingBox[0], boundingBox[1] + boundingBox[3]))
-            keyframeNode.inputPaths.value = filesByType.binary
-            if len(filesByType.binary) == 1:
+            keyframeNode.inputPaths.value = filesByType.asciiBinary
+            if len(filesByType.asciiBinary) == 1:
                 newVideoNodeMessage = "New node '{}' added for the input video.".format(keyframeNode.getLabel())
             else:
-                newVideoNodeMessage = "New node '{}' added for a rig of {} synchronized cameras.".format(keyframeNode.getLabel(), len(filesByType.binary))
+                newVideoNodeMessage = "New node '{}' added for a rig of {} synchronized cameras.".format(keyframeNode.getLabel(), len(filesByType.asciiBinary))
             self.info.emit(
                 Message(
                     "Video Input",
@@ -738,42 +740,13 @@ class Reconstruction(UIGraph):
                     "If you know the Camera Make/Model, it is highly recommended to declare them in the Node."
                 ))
 
-        if filesByType.ascii_binary:
-            if len(filesByType.ascii_binary) > 1:
-                self.error.emit(
-                    Message(
-                        "Multiple XML files in input",
-                        "Ignore the xml Panorama files:\n\n'{}'.".format(',\n'.join(filesByType.ascii_binary)),
-                        "",
-                    ))
-            else:
-                panoramaInitNodes = self.graph.nodesOfType('PanoramaInit')
-                for panoramaInfoFile in filesByType.ascii_binary:
-                    for panoramaInitNode in panoramaInitNodes:
-                        panoramaInitNode.attribute('initializeCameras').value = 'File'
-                        panoramaInitNode.attribute('config').value = panoramaInfoFile
-                if panoramaInitNodes:
-                    self.info.emit(
-                        Message(
-                            "Panorama XML",
-                            "XML file declared on PanoramaInit node",
-                            "XML file '{}' set on node '{}'".format(','.join(filesByType.ascii_binary), ','.join([n.getLabel() for n in panoramaInitNodes])),
-                        ))
-                else:
-                    self.error.emit(
-                        Message(
-                            "No PanoramaInit Node",
-                            "No PanoramaInit Node to set the Panorama file:\n'{}'.".format(','.join(filesByType.ascii_binary)),
-                            "",
-                        ))
-
-        if not filesByType.audio and not filesByType.binary and not filesByType.ascii_binary:
-            if filesByType.other:
-                extensions = set([os.path.splitext(url)[1] for url in filesByType.other])
+        if not filesByType.audio and not filesByType.asciiBinary:
+            if filesByType.binary:
+                extensions = set([os.path.splitext(url)[1] for url in filesByType.binary])
                 self.error.emit(
                     Message(
                         "No Recognized Input File",
-                        "No recognized input file in the {} dropped files".format(len(filesByType.other)),
+                        "No recognized input file in the {} dropped files".format(len(filesByType.binary)),
                         "Unknown file extensions: " + ', '.join(extensions)
                     )
                 )
@@ -781,7 +754,6 @@ class Reconstruction(UIGraph):
     @staticmethod
     def getFilesByTypeFromDrop(drop):
         """
-
         Args:
             drop:
 

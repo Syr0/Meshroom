@@ -5,24 +5,46 @@ import os
 
 from meshroom.core.graph import Graph, GraphModification
 
+# Supported image extensions
+audioExtensions = (
+    '.mp3', '.wav', '.aac', '.flac', '.ogg', '.m4a', '.wma'
+)
+
+def isAsciiBinary(file):
+    """ Check if the file contains only '1', '0', spaces, and newline characters. """
+    try:
+        with open(file, 'r') as f:
+            content = f.read()
+            return all(c in '10 \r\n' for c in content)
+    except:
+        return False
+
+def hasExtension(filepath, extensions):
+    """ Return whether filepath is one of the following extensions. """
+    return os.path.splitext(filepath)[1].lower() in extensions
+
+
 class FilesByType:
     def __init__(self):
         self.audio = []
+        self.asciiBinary = []
         self.binary = []
-        self.ascii_binary = []
-        self.other = []
 
     def __bool__(self):
-        return self.audio or self.binary or self.ascii_binary
+        return self.audio or self.asciiBinary
 
     def extend(self, other):
         self.audio.extend(other.audio)
+        self.asciiBinary.extend(other.asciiBinary)
         self.binary.extend(other.binary)
-        self.ascii_binary.extend(other.ascii_binary)
-        self.other.extend(other.other)
 
     def addFile(self, file):
-            self.other.append(file)
+        if hasExtension(file, audioExtensions):
+            self.audio.append(file)
+        elif isAsciiBinary(file):
+            self.asciiBinary.append(file)
+        else:
+            self.binary.append(file)
 
     def addFiles(self, files):
         for file in files:
