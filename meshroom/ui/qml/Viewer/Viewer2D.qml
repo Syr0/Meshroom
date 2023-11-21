@@ -21,7 +21,6 @@ FocusScope {
     property Component panoramaViewerComp: Qt.createComponent("PanoramaViewer.qml")
     property var useFloatImageViewer: displayHDR.checked
     property alias useLensDistortionViewer: displayLensDistortionViewer.checked
-    property alias usePanoramaViewer: displayPanoramaViewer.checked
 
     property var activeNodeFisheye: _reconstruction ? _reconstruction.activeNodes.get("PanoramaInit").node : null
     property bool cropFisheye : activeNodeFisheye ? activeNodeFisheye.attribute("useFisheye").value : false
@@ -423,7 +422,7 @@ FocusScope {
                 // qtAliceVision Image Viewer
                 ExifOrientedViewer {
                     id: floatImageViewerLoader
-                    active: root.aliceVisionPluginAvailable && (root.useFloatImageViewer || root.useLensDistortionViewer) && !panoramaViewerLoader.active
+                    active: root.aliceVisionPluginAvailable && (root.useFloatImageViewer || root.useLensDistortionViewer)
                     visible: (floatImageViewerLoader.status === Loader.Ready) && active
                     anchors.centerIn: parent
                     orientationTag: imgContainer.orientationTag
@@ -486,38 +485,10 @@ FocusScope {
                     }
                 }
 
-                // qtAliceVision Panorama Viewer
-                Loader {
-                    id: panoramaViewerLoader
-                    active: root.aliceVisionPluginAvailable && root.usePanoramaViewer && _reconstruction.activeNodes.get('sfm').node
-                    visible: (panoramaViewerLoader.status === Loader.Ready) && active
-                    anchors.centerIn: parent
-
-                    onActiveChanged: {
-                        if (active) {
-                            setSource("PanoramaViewer.qml", {
-                                'subdivisionsPano': Qt.binding(function() { return panoramaViewerToolbar.subdivisionsValue }),
-                                'cropFisheyePano': Qt.binding(function() { return root.cropFisheye }),
-                                'downscale': Qt.binding(function() { return panoramaViewerToolbar.downscaleValue }),
-                                'isEditable': Qt.binding(function() { return panoramaViewerToolbar.enableEdit }),
-                                'isHighlightable': Qt.binding(function() { return panoramaViewerToolbar.enableHover }),
-                                'displayGridPano': Qt.binding(function() { return panoramaViewerToolbar.displayGrid }),
-                                'mouseMultiplier': Qt.binding(function() { return panoramaViewerToolbar.mouseSpeed }),
-                                'msfmData': Qt.binding(function() { return (msfmDataLoader && msfmDataLoader.item && msfmDataLoader.status === Loader.Ready
-                                                                           && msfmDataLoader.item.status === 2) ? msfmDataLoader.item : null }),
-                            })
-                        } else {
-                            // Forcing the unload (instead of using Component.onCompleted to load it once and for all) is necessary since Qt 5.14
-                            setSource("", {})
-                            displayPanoramaViewer.checked = false
-                        }
-                    }
-                }
-
                 // Simple QML Image Viewer (using Qt or qtAliceVisionImageIO to load images)
                 ExifOrientedViewer {
                     id: qtImageViewerLoader
-                    active: !floatImageViewerLoader.active && !panoramaViewerLoader.active
+                    active: !floatImageViewerLoader.active
                     anchors.centerIn: parent
                     orientationTag: imgContainer.orientationTag
                     xOrigin: imgContainer.width / 2
@@ -553,8 +524,6 @@ FocusScope {
                 property var image: {
                     if (floatImageViewerLoader.active)
                         floatImageViewerLoader.item
-                    else if (panoramaViewerLoader.active)
-                        panoramaViewerLoader.item
                     else
                         qtImageViewerLoader.item
                 }
@@ -1352,16 +1321,11 @@ FocusScope {
         // running property binding seems broken, only dynamic binding assignment works
         Component.onCompleted: {
             running = Qt.binding(function() {
-                return (root.usePanoramaViewer === true && imgContainer.image && imgContainer.image.allImagesLoaded === false)
+                return (imgContainer.image && imgContainer.image.allImagesLoaded === false)
                        || (imgContainer.image && imgContainer.image.status === Image.Loading)
             })
         }
         // disable the visibility when unused to avoid stealing the mouseEvent to the image color picker
         visible: running
-
-        onVisibleChanged: {
-            if (panoramaViewerLoader.active)
-                fit()
-        }
     }
 }
