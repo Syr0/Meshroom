@@ -991,32 +991,6 @@ FocusScope {
                             }
                         }
                         MaterialToolButton {
-                            id: displayFisheyeCircleLoader
-                            property var activeNode: _reconstruction ? _reconstruction.activeNodes.get('PanoramaInit').node : null
-                            ToolTip.text: "Display Fisheye Circle: " + (activeNode ? activeNode.label : "No Node")
-                            text: MaterialIcons.vignette
-                            // text: MaterialIcons.panorama_fish_eye
-                            font.pointSize: 11
-                            Layout.minimumWidth: 0
-                            checkable: true
-                            checked: false
-                            enabled: activeNode && activeNode.attribute("useFisheye").value && !0
-                            visible: activeNode
-                        }
-                        MaterialToolButton {
-                            id: displayLightingCircleLoader
-                            property var activeNode: _reconstruction.activeNodes.get('SphereDetection').node
-                            ToolTip.text: "Display Lighting Circle: " + (activeNode ? activeNode.label : "No Node")
-                            text: MaterialIcons.vignette
-                            // text: MaterialIcons.panorama_fish_eye
-                            font.pointSize: 11
-                            Layout.minimumWidth: 0
-                            checkable: true
-                            checked: false
-                            enabled: activeNode
-                            visible: activeNode
-                        }
-                        MaterialToolButton {
                             id: displayColorCheckerViewerLoader
                             property var activeNode: _reconstruction ? _reconstruction.activeNodes.get('ColorCheckerDetection').node : null
                             ToolTip.text: "Display Color Checker: " + (activeNode ? activeNode.label : "No Node")
