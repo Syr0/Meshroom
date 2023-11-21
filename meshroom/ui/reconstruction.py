@@ -719,16 +719,16 @@ class Reconstruction(UIGraph):
         This method allows to reduce process time by doing it on Python side.
         """
         filesByType = self.getFilesByTypeFromDrop(drop)
-        if filesByType.images:
-            self._workerThreads.apply_async(func=self.importImagesSync, args=(filesByType.images, cameraInit,))
-        if filesByType.videos:
+        if filesByType.audio:
+            self._workerThreads.apply_async(func=self.importImagesSync, args=(filesByType.audio, cameraInit,))
+        if filesByType.binary:
             boundingBox = self.layout.boundingBox()
             keyframeNode = self.addNewNode("KeyframeSelection", position=Position(boundingBox[0], boundingBox[1] + boundingBox[3]))
-            keyframeNode.inputPaths.value = filesByType.videos
-            if len(filesByType.videos) == 1:
+            keyframeNode.inputPaths.value = filesByType.binary
+            if len(filesByType.binary) == 1:
                 newVideoNodeMessage = "New node '{}' added for the input video.".format(keyframeNode.getLabel())
             else:
-                newVideoNodeMessage = "New node '{}' added for a rig of {} synchronized cameras.".format(keyframeNode.getLabel(), len(filesByType.videos))
+                newVideoNodeMessage = "New node '{}' added for a rig of {} synchronized cameras.".format(keyframeNode.getLabel(), len(filesByType.binary))
             self.info.emit(
                 Message(
                     "Video Input",
@@ -738,17 +738,17 @@ class Reconstruction(UIGraph):
                     "If you know the Camera Make/Model, it is highly recommended to declare them in the Node."
                 ))
 
-        if filesByType.panoramaInfo:
-            if len(filesByType.panoramaInfo) > 1:
+        if filesByType.ascii_binary:
+            if len(filesByType.ascii_binary) > 1:
                 self.error.emit(
                     Message(
                         "Multiple XML files in input",
-                        "Ignore the xml Panorama files:\n\n'{}'.".format(',\n'.join(filesByType.panoramaInfo)),
+                        "Ignore the xml Panorama files:\n\n'{}'.".format(',\n'.join(filesByType.ascii_binary)),
                         "",
                     ))
             else:
                 panoramaInitNodes = self.graph.nodesOfType('PanoramaInit')
-                for panoramaInfoFile in filesByType.panoramaInfo:
+                for panoramaInfoFile in filesByType.ascii_binary:
                     for panoramaInitNode in panoramaInitNodes:
                         panoramaInitNode.attribute('initializeCameras').value = 'File'
                         panoramaInitNode.attribute('config').value = panoramaInfoFile
@@ -757,17 +757,17 @@ class Reconstruction(UIGraph):
                         Message(
                             "Panorama XML",
                             "XML file declared on PanoramaInit node",
-                            "XML file '{}' set on node '{}'".format(','.join(filesByType.panoramaInfo), ','.join([n.getLabel() for n in panoramaInitNodes])),
+                            "XML file '{}' set on node '{}'".format(','.join(filesByType.ascii_binary), ','.join([n.getLabel() for n in panoramaInitNodes])),
                         ))
                 else:
                     self.error.emit(
                         Message(
                             "No PanoramaInit Node",
-                            "No PanoramaInit Node to set the Panorama file:\n'{}'.".format(','.join(filesByType.panoramaInfo)),
+                            "No PanoramaInit Node to set the Panorama file:\n'{}'.".format(','.join(filesByType.ascii_binary)),
                             "",
                         ))
 
-        if not filesByType.images and not filesByType.videos and not filesByType.panoramaInfo:
+        if not filesByType.audio and not filesByType.binary and not filesByType.ascii_binary:
             if filesByType.other:
                 extensions = set([os.path.splitext(url)[1] for url in filesByType.other])
                 self.error.emit(

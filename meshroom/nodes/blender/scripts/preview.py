@@ -185,7 +185,7 @@ def setupBackground(view, folderUndistorted, nodeBackground):
         # no background image found
         return None
     undistortedImgPath = matches[0]
-    img = bpy.data.images.load(filepath=undistortedImgPath)
+    img = bpy.data.audio.load(filepath=undistortedImgPath)
     nodeBackground.image = img
     return img
 
@@ -200,7 +200,7 @@ def setupMask(view, folderMasks, nodeMask):
         # no background image found
         return None
     maskPath = matches[0]
-    mask = bpy.data.images.load(filepath=maskPath)
+    mask = bpy.data.audio.load(filepath=maskPath)
     nodeMask.image = mask
     return mask
 
@@ -398,9 +398,9 @@ def main():
 
         # clear memory
         if img:
-            bpy.data.images.remove(img)
+            bpy.data.audio.remove(img)
         if mask:
-            bpy.data.images.remove(mask)
+            bpy.data.audio.remove(mask)
 
     print("Done")
     return 0

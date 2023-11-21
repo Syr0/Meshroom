@@ -5,101 +5,23 @@ import os
 
 from meshroom.core.graph import Graph, GraphModification
 
-# Supported image extensions
-imageExtensions = (
-    # bmp:
-    '.bmp',
-    # cineon:
-    '.cin',
-    # dds
-    '.dds',
-    # dpx:
-    '.dpx',
-    # gif:
-    '.gif',
-    # hdr:
-    '.hdr', '.rgbe',
-    # heif
-    '.heic', '.heif', '.avif',
-    # ico:
-    '.ico',
-    # iff:
-    '.iff', '.z',
-    # jpeg:
-    '.jpg', '.jpe', '.jpeg', '.jif', '.jfif', '.jfi',
-    # jpeg2000:
-    '.jp2', '.j2k', '.j2c',
-    # openexr:
-    '.exr', '.sxr', '.mxr',
-    # png:
-    '.png',
-    # pnm:
-    '.ppm', '.pgm', '.pbm', '.pnm', '.pfm',
-    # psd:
-    '.psd', '.pdd', '.psb',
-    # ptex:
-    '.ptex', '.ptx',
-    # raw:
-    '.bay', '.bmq', '.cr2', '.cr3', '.crw', '.cs1', '.dc2', '.dcr', '.dng', '.erf', '.fff', '.k25', '.kdc', '.mdc', '.mos', '.mrw', '.nef', '.orf', '.pef', '.pxn', '.raf', '.raw', '.rdc', '.sr2', '.srf', '.x3f', '.arw', '.3fr', '.cine', '.ia', '.kc2', '.mef', '.nrw', '.qtk', '.rw2', '.sti', '.rwl', '.srw', '.drf', '.dsc', '.cap', '.iiq', '.rwz',
-    # rla:
-    '.rla',
-    # sgi:
-    '.sgi', '.rgb', '.rgba', '.bw', '.int', '.inta',
-    # socket:
-    '.socket',
-    # softimage:
-    '.pic',
-    # tiff:
-    '.tiff', '.tif', '.tx', '.env', '.sm', '.vsm',
-    # targa:
-    '.tga', '.tpic',
-    # webp:
-    'webp',
-    # zfile:
-    '.zfile',
-    # osl:
-    '.osl', '.oso', '.oslgroup', '.oslbody',
-    )
-videoExtensions = (
-    '.avi', '.mov', '.qt',
-    '.mkv', '.webm',
-    '.mp4', '.mpg', '.mpeg', '.m2v', '.m4v',
-    '.wmv',
-    '.ogv', '.ogg',
-    '.mxf',
-    )
-panoramaInfoExtensions = ('.xml')
-
-
-def hasExtension(filepath, extensions):
-    """ Return whether filepath is one of the following extensions. """
-    return os.path.splitext(filepath)[1].lower() in extensions
-
-
 class FilesByType:
     def __init__(self):
-        self.images = []
-        self.videos = []
-        self.panoramaInfo = []
+        self.audio = []
+        self.binary = []
+        self.ascii_binary = []
         self.other = []
 
     def __bool__(self):
-        return self.images or self.videos or self.panoramaInfo
+        return self.audio or self.binary or self.ascii_binary
 
     def extend(self, other):
-        self.images.extend(other.images)
-        self.videos.extend(other.videos)
-        self.panoramaInfo.extend(other.panoramaInfo)
+        self.audio.extend(other.audio)
+        self.binary.extend(other.binary)
+        self.ascii_binary.extend(other.ascii_binary)
         self.other.extend(other.other)
 
     def addFile(self, file):
-        if hasExtension(file, imageExtensions):
-            self.images.append(file)
-        elif hasExtension(file, videoExtensions):
-            self.videos.append(file)
-        elif hasExtension(file, panoramaInfoExtensions):
-            self.panoramaInfo.append(file)
-        else:
             self.other.append(file)
 
     def addFiles(self, files):

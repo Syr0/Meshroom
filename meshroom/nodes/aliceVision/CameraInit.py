@@ -351,10 +351,10 @@ The needed metadata are:
             searchedForImages = True
 
         # If there was no input file, check that the directories do contain images
-        if searchedForImages and not filesByType.images:
+        if searchedForImages and not filesByType.audio:
             raise ValueError("No valid input file or no image in the provided directories")
 
-        views, intrinsics = self.buildIntrinsics(node, filesByType.images)
+        views, intrinsics = self.buildIntrinsics(node, filesByType.audio)
         self.setAttributes(node, {"viewpoints": views, "intrinsics": intrinsics})
 
     def upgradeAttributeValues(self, attrValues, fromVersion):
