@@ -132,12 +132,6 @@ Item {
                             checkable: true
                             checked: MeshroomApp.default8bitViewerEnabled
                         }
-                        Action {
-                            id: enableSequencePlayerAction
-                            text: "Enable Sequence Player"
-                            checkable: true
-                            checked: false
-                        }
                     }
                 }
             }
