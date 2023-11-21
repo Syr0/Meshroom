@@ -720,7 +720,7 @@ class Reconstruction(UIGraph):
         """
         filesByType = self.getFilesByTypeFromDrop(drop)
         if filesByType.audio:
-            self._workerThreads.apply_async(func=self.importImagesSync, args=(filesByType.audio, cameraInit,))
+            self._workerThreads.apply_async(func=self.ImportAudioSync, args=(filesByType.audio, cameraInit,))
         if filesByType.binary:
             boundingBox = self.layout.boundingBox()
             keyframeNode = self.addNewNode("KeyframeSelection", position=Position(boundingBox[0], boundingBox[1] + boundingBox[3]))
@@ -810,7 +810,7 @@ class Reconstruction(UIGraph):
         logging.debug("importImagesFromFolder: " + str(path))
         filesByType = multiview.findFilesByTypeInFolder(path, recursive)
         if filesByType.images:
-            self._workerThreads.apply_async(func=self.importImagesSync, args=(filesByType.images, self.cameraInit,))
+            self._workerThreads.apply_async(func=self.ImportAudioSync, args=(filesByType.images, self.cameraInit,))
 
     @Slot("QVariant")
     def importImagesUrls(self, imagePaths, recursive=False):
@@ -825,7 +825,7 @@ class Reconstruction(UIGraph):
             paths.append(p)
         self.importImagesFromFolder(paths)
 
-    def importImagesSync(self, images, cameraInit):
+    def ImportAudioSync(self, images, cameraInit):
         """ Add the given list of images to the Reconstruction. """
         try:
             self.buildIntrinsics(cameraInit, images)
