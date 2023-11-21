@@ -22,7 +22,6 @@ Item {
     property variant reconstruction: _reconstruction
     readonly property variant cameraInits: _reconstruction ? _reconstruction.cameraInits : null
     property bool readOnly: false
-    property alias panel3dViewer: panel3dViewerLoader.item
     readonly property Viewer2D viewer2D: viewer2D
     readonly property alias imageGallery: imageGallery
 
@@ -30,20 +29,9 @@ Item {
     implicitHeight: 400
 
 
-    // Load a 3D media file in the 3D viewer
-    function load3DMedia(filepath, label = undefined) {
-        if (panel3dViewerLoader.active) {
-            panel3dViewerLoader.item.viewer3D.load(filepath, label)
-        }
-    }
-
     Connections {
         target: reconstruction
-        function onGraphChanged() {
-            if (panel3dViewerLoader.active) {
-                panel3dViewerLoader.item.viewer3D.clear()
-            }
-        }
+
         function onSfmChanged() { viewSfM() }
         function onSfmReportChanged() { viewSfM() }
     }
@@ -54,9 +42,6 @@ Item {
         var activeNode = _reconstruction.activeNodes ? _reconstruction.activeNodes.get('sfm').node : null
         if (!activeNode)
             return
-        if (panel3dViewerLoader.active) {
-            panel3dViewerLoader.item.viewer3D.view(activeNode.attribute('output'))
-        }
     }
 
     SystemPalette { id: activePalette }
@@ -83,7 +68,6 @@ Item {
                 onFilesDropped: reconstruction.handleFilesDrop(drop, augmentSfm ? null : cameraInit)
             }
             LiveSfmView {
-                visible: settings_UILayout.showLiveReconstruction
                 reconstruction: root.reconstruction
                 Layout.fillWidth: true
                 Layout.preferredHeight: childrenRect.height
@@ -157,76 +141,6 @@ Item {
             }
         }
 
-        Item {
-            visible: settings_UILayout.showViewer3D
-            Layout.minimumWidth: 20
-            Layout.minimumHeight: 80
-            Layout.fillHeight: true
-            implicitWidth: Math.round(parent.width * 0.45)
 
-            Loader {
-                id: panel3dViewerLoader
-                active: settings_UILayout.showViewer3D
-                visible: active
-                anchors.fill: parent
-                sourceComponent: panel3dViewerComponent
-            }
-        }
-
-        Component {
-            id: panel3dViewerComponent
-            Panel {
-                id: panel3dViewer
-                title: "3D Viewer"
-
-                property alias viewer3D: c_viewer3D
-
-                Controls1.SplitView {
-                    id: c_viewer3DSplitView
-                    anchors.fill: parent
-                    Viewer3D {
-                        id: c_viewer3D
-
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        Layout.minimumWidth: 20
-
-                        DropArea {
-                            anchors.fill: parent
-                            keys: ["text/uri-list"]
-                            onDropped: {
-                                drop.urls.forEach(function(url){ load3DMedia(url); });
-                            }
-                        }
-                        
-                        // Load reconstructed model
-                        Button {
-                            readonly property var outputAttribute: _reconstruction && _reconstruction.texturing ? _reconstruction.texturing.attribute("outputMesh") : null
-                            readonly property bool outputReady: outputAttribute && _reconstruction.texturing.globalStatus === "SUCCESS"
-                            readonly property int outputMediaIndex: c_viewer3D.library.find(outputAttribute)
-
-                            text: "Load Model"
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 10
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            visible: outputReady && outputMediaIndex == -1
-                            onClicked: viewer3D.view(_reconstruction.texturing.attribute("outputMesh"))
-                        }
-                    }
-                    
-                    // Inspector Panel
-                    Inspector3D {
-                        id: inspector3d
-                        width: 200
-                        Layout.minimumWidth: 5
-
-                        mediaLibrary: c_viewer3D.library
-                        camera: c_viewer3D.mainCamera
-                        uigraph: reconstruction
-                        onNodeActivated: _reconstruction.setActiveNode(node)
-                    }
-                }
-            }
-        }
     }
 }

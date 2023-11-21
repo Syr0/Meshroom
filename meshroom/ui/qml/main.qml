@@ -93,10 +93,8 @@ ApplicationWindow {
     Settings {
         id: settings_UILayout
         category: 'UILayout'
-        property alias showLiveReconstruction: liveSfMVisibilityCB.checked
         property alias showGraphEditor: graphEditorVisibilityCB.checked
         property alias showImageViewer: imageViewerVisibilityCB.checked
-        property alias showViewer3D: viewer3DVisibilityCB.checked
     }
 
     Component.onDestruction: {
@@ -814,20 +812,8 @@ ApplicationWindow {
                 checked: true
             }
             MenuItem {
-                id: liveSfMVisibilityCB
-                text: "Live Reconstruction"
-                checkable: true
-                checked: false
-            }
-            MenuItem {
                 id: imageViewerVisibilityCB
                 text: "Image Viewer"
-                checkable: true
-                checked: true
-            }
-            MenuItem {
-                id: viewer3DVisibilityCB
-                text: "3D Viewer"
                 checkable: true
                 checked: true
             }
