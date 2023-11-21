@@ -18,7 +18,6 @@ FocusScope {
     property var viewIn3D
 
     property Component floatViewerComp: Qt.createComponent("FloatImage.qml")
-    property Component panoramaViewerComp: Qt.createComponent("PanoramaViewer.qml")
     property var useFloatImageViewer: displayHDR.checked
     property alias useLensDistortionViewer: displayLensDistortionViewer.checked
 
@@ -366,7 +365,7 @@ FocusScope {
                 resetDefaultValues()
             }
             colorPickerVisible: {
-                return !displayPanoramaViewer.checked
+                return true
             }
 
             colorRGBA: {
@@ -386,13 +385,6 @@ FocusScope {
             id: lensDistortionImageToolbar
             anchors.margins: 0
             visible: displayLensDistortionToolBarAction.checked && displayLensDistortionToolBarAction.enabled
-            Layout.fillWidth: true
-        }
-
-        PanoramaToolbar {
-            id: panoramaViewerToolbar
-            anchors.margins: 0
-            visible: displayPanoramaToolBarAction.checked && displayPanoramaToolBarAction.enabled
             Layout.fillWidth: true
         }
 
@@ -810,7 +802,7 @@ FocusScope {
                         id: msfmDataLoader
 
                         property bool isUsed: displayFeatures.checked || displaySfmStatsView.checked || displaySfmDataGlobalStats.checked
-                                              || displayPanoramaViewer.checked || displayLensDistortionViewer.checked
+                                              || 0 || displayLensDistortionViewer.checked
                         property var activeNode: {
                             if (!root.aliceVisionPluginAvailable) {
                                 return null
@@ -822,11 +814,6 @@ FocusScope {
                             var sfmNode = _reconstruction ? _reconstruction.activeNodes.get(nodeType).node : null
                             if (sfmNode === null) {
                                 return null
-                            }
-                            if (displayPanoramaViewer.checked) {
-                                sfmNode = _reconstruction.activeNodes.get('SfMTransform').node
-                                var previousNode = sfmNode.attribute("input").rootLinkParam.node
-                                return previousNode
                             }
                             return sfmNode
                         }
@@ -857,7 +844,7 @@ FocusScope {
                     Loader {
                         id: mtracksLoader
 
-                        property bool isUsed: displayFeatures.checked || displaySfmStatsView.checked || displaySfmDataGlobalStats.checked || displayPanoramaViewer.checked
+                        property bool isUsed: displayFeatures.checked || displaySfmStatsView.checked || displaySfmDataGlobalStats.checked
                         property var activeNode: {
                             if (!root.aliceVisionPluginAvailable) {
                                 return null
@@ -1050,53 +1037,14 @@ FocusScope {
                             checked: false
                             enabled: activeNode && isComputed
                             onCheckedChanged : {
-                                if ((displayHDR.checked || displayPanoramaViewer.checked) && checked) {
+                                if ((displayHDR.checked) && checked) {
                                     displayHDR.checked = false
-                                    displayPanoramaViewer.checked = false
                                 } else if (!checked) {
                                     displayHDR.checked = true
                                 }
                             }
                         }
-                        MaterialToolButton {
-                            id: displayPanoramaViewer
-                            property var activeNode: root.aliceVisionPluginAvailable && _reconstruction ? _reconstruction.activeNodes.get('SfMTransform').node : null
-                            property bool isComputed: {
-                                if (!activeNode)
-                                    return false
-                                if (activeNode.attribute("method").value !== "manual")
-                                    return false
-                                var inputAttr = activeNode.attribute("input")
-                                if (!inputAttr)
-                                    return false
-                                var inputAttrLink = inputAttr.rootLinkParam
-                                if (!inputAttrLink)
-                                    return false
-                                return inputAttrLink.node.isComputed
-                            }
 
-                            ToolTip.text: activeNode ? "Panorama Viewer " + activeNode.label : "Panorama Viewer"
-                            text: MaterialIcons.panorama_sphere
-                            font.pointSize: 16
-                            padding: 0
-                            Layout.minimumWidth: 0
-                            checkable: true
-                            checked: false
-                            enabled: activeNode && isComputed
-                            onCheckedChanged : {
-                                if (displayLensDistortionViewer.checked && checked) {
-                                    displayLensDistortionViewer.checked = false
-                                }
-                                if (displayFisheyeCircleLoader.checked && checked) {
-                                    displayFisheyeCircleLoader.checked = false
-                                }
-                            }
-                            onEnabledChanged : {
-                                if (!enabled) {
-                                    checked = false
-                                }
-                            }
-                        }
                         MaterialToolButton {
                             id: displayFeatures
                             ToolTip.text: "Display Features"
@@ -1105,7 +1053,7 @@ FocusScope {
                             Layout.minimumWidth: 0
                             checkable: true
                             checked: false
-                            enabled: root.aliceVisionPluginAvailable && !displayPanoramaViewer.checked
+                            enabled: root.aliceVisionPluginAvailable
                             onEnabledChanged : {
                                 if (enabled == false) checked = false
                             }
@@ -1120,7 +1068,7 @@ FocusScope {
                             Layout.minimumWidth: 0
                             checkable: true
                             checked: false
-                            enabled: activeNode && activeNode.attribute("useFisheye").value && !displayPanoramaViewer.checked
+                            enabled: activeNode && activeNode.attribute("useFisheye").value && !0
                             visible: activeNode
                         }
                         MaterialToolButton {
