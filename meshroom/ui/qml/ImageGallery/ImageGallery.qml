@@ -32,7 +32,7 @@ Panel {
     signal allViewpointsCleared()
     signal filesDropped(var drop, var augmentSfm)
 
-    title: "Image Gallery"
+    title: "File Gallery"
     implicitWidth: (root.defaultCellSize + 2) * 2
 
     Connections {
@@ -413,7 +413,7 @@ Panel {
                     font.family: MaterialIcons.fontFamily
                 }
                 Label {
-                    text: "Drop Image Files / Folders"
+                    text: "Drop Files / Folders"
                 }
             }
             // Placeholder when the filtered images list is empty
