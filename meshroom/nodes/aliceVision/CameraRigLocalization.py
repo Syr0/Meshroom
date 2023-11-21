@@ -164,14 +164,6 @@ class CameraRigLocalization(desc.AVCommandLineNode):
             range=(0.0, 10.0, 0.1),
             uid=[0],
         ),
-        desc.IntParam(
-            name="nNearestKeyFrames",
-            label="N Nearest Key Frames",
-            description="[cctag] Number of images to retrieve in database.",
-            value=5,
-            range=(0, 50, 1),
-            uid=[0],
-        ),
         desc.ChoiceParam(
             name="verboseLevel",
             label="Verbose Level",

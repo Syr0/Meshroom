@@ -169,14 +169,6 @@ class CameraLocalization(desc.AVCommandLineNode):
             value=True,
             uid=[0],
         ),
-        desc.IntParam(
-            name="nNearestKeyFrames",
-            label="N Nearest Key Frames",
-            description="[cctag] Number of images to retrieve in the database. Parameters specific for final (optional) bundle adjustment optimization of the sequence.",
-            value=5,
-            range=(1, 100, 1),
-            uid=[0],
-        ),
         desc.StringParam(
             name="globalBundle",
             label="Global Bundle",
