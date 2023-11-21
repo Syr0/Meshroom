@@ -50,9 +50,6 @@ Panel {
         property variant intrinsics: currentCameraInit ? currentCameraInit.attribute('intrinsics').value : undefined
         property bool readOnly: ((_reconstruction && currentCameraInit) ? currentCameraInit.locked : root.readOnly) || displayHDR.checked
 
-        onViewpointsChanged: {
-            ThumbnailCache.clearRequests()
-        }
 
         onIntrinsicsChanged: {
             parseIntr()
@@ -176,8 +173,8 @@ Panel {
 
             focus: true
             clip: true
-            cellWidth: thumbnailSizeSlider.value
-            cellHeight: cellWidth
+            cellWidth: 100
+            cellHeight: 20
             highlightFollowsCurrentItem: true
             keyNavigationEnabled: true
             property bool updateSelectedViewFromGrid: true
@@ -191,16 +188,7 @@ Panel {
                     }
                 }
             }
-            function makeCurrentItemVisible() {
-                grid.positionViewAtIndex(grid.currentIndex, GridView.Visible)
-            }
 
-            function updateCurrentIndexFromSelectionViewId() {
-                var idx = grid.model.find(_reconstruction.selectedViewId, "viewId")
-                if (idx >= 0 && grid.currentIndex !== idx) {
-                    grid.currentIndex = idx
-                }
-            }
             onCurrentItemChanged: {
                 if (grid.updateSelectedViewFromGrid && grid.currentItem) {
                     // If tempCameraInit is set and the first image in the GridView is selected, there has been a change of the CameraInit group and the viewId might be the same
@@ -208,25 +196,6 @@ Panel {
                     if (tempCameraInit !== null && grid.currentIndex == 0)
                         _reconstruction.selectedViewId = -1
                     _reconstruction.selectedViewId = grid.currentItem.viewpoint.get("viewId").value
-                }
-            }
-
-            // Update grid item when corresponding thumbnail is computed
-            Connections {
-                target: ThumbnailCache
-                function onThumbnailCreated(imgSource, callerID) {
-                    let item = grid.itemAtIndex(callerID);  // item is an ImageDelegate
-                    if (item && item.source === imgSource) {
-                        item.updateThumbnail()
-                        return
-                    }
-                    // fallback in case the ImageDelegate cellID changed
-                    for (let idx = 0; idx < grid.count; idx++) {
-                        item = grid.itemAtIndex(idx)
-                        if (item && item.source === imgSource) {
-                            item.updateThumbnail()
-                        }
-                    }
                 }
             }
 
@@ -872,23 +841,5 @@ Panel {
             width: 1
         }
 
-        // Thumbnail size icon and slider
-        MaterialToolButton {
-            Layout.minimumWidth: childrenRect.width
-
-            text: MaterialIcons.photo_size_select_large
-            ToolTip.text: "Thumbnails Scale"
-            padding: 0
-            anchors.margins: 0
-            font.pointSize: 11
-            onClicked: { thumbnailSizeSlider.value = defaultCellSize }
-        }
-        Slider {
-            id: thumbnailSizeSlider
-            from: 70
-            value: defaultCellSize
-            to: 250
-            implicitWidth: 70
-        }
     }
 }

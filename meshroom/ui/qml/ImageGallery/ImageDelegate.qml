@@ -33,26 +33,6 @@ Item {
         property var metadata: metadataStr ? JSON.parse(viewpoint.get("metadata").value) : {}
     }
 
-    // update thumbnail location
-    // can be called from the GridView when a new thumbnail has been written on disk
-    function updateThumbnail() {
-        thumbnail.source = ThumbnailCache.thumbnail(root.source, root.cellID)
-    }
-    onSourceChanged: {
-        updateThumbnail()
-    }
-
-    // Send a new request after 5 seconds if thumbnail is not loaded
-    // This is meant to avoid deadlocks in case there is a synchronization problem
-    Timer {
-        interval: 5000
-        running: true
-        onTriggered: {
-            if (thumbnail.status == Image.Null) {
-                updateThumbnail()
-            }
-        }
-    }
 
     MouseArea {
         id: imageMA
@@ -112,29 +92,6 @@ Item {
             anchors.fill: parent
             spacing: 0
 
-            // Image thumbnail and background
-            Rectangle {
-                id: imageBackground
-                color: Qt.darker(imageLabel.palette.base, 1.15)
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                border.color: isCurrentItem ? imageLabel.palette.highlight : Qt.darker(imageLabel.palette.highlight)
-                border.width: imageMA.containsMouse || root.isCurrentItem ? 2 : 0
-                Image {
-                    id: thumbnail
-                    anchors.fill: parent
-                    anchors.margins: 4
-                    asynchronous: true
-                    autoTransform: true
-                    fillMode: Image.PreserveAspectFit
-                    smooth: false
-                    cache: false
-                }
-                BusyIndicator {
-                    anchors.centerIn: parent
-                    running: thumbnail.status != Image.Ready
-                }
-            }
             // Image basename
             Label {
                 id: imageLabel

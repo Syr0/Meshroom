@@ -15,7 +15,6 @@ from meshroom.core.taskManager import TaskManager
 from meshroom.ui import components
 from meshroom.ui.components.clipboard import ClipboardHelper
 from meshroom.ui.components.filepath import FilepathHelper
-from meshroom.ui.components.thumbnail import ThumbnailCache
 from meshroom.ui.palette import PaletteManager
 from meshroom.ui.reconstruction import Reconstruction
 from meshroom.ui.utils import QmlInstantEngine
@@ -116,11 +115,6 @@ class MeshroomApp(QApplication):
         pwd = os.path.dirname(__file__)
         self.setWindowIcon(QIcon(os.path.join(pwd, "img/meshroom.svg")))
 
-        # Initialize thumbnail cache:
-        # - read related environment variables
-        # - clean cache directory and make sure it exists on disk
-        ThumbnailCache.initialize()
-
         # QML engine setup
         qmlDir = os.path.join(pwd, "qml")
         url = os.path.join(qmlDir, "main.qml")
@@ -152,7 +146,6 @@ class MeshroomApp(QApplication):
         # => expose them as context properties instead
         self.engine.rootContext().setContextProperty("Filepath", FilepathHelper(parent=self))
         self.engine.rootContext().setContextProperty("Clipboard", ClipboardHelper(parent=self))
-        self.engine.rootContext().setContextProperty("ThumbnailCache", ThumbnailCache(parent=self))
 
         # additional context properties
         self.engine.rootContext().setContextProperty("_PaletteManager", PaletteManager(self.engine, parent=self))
