@@ -467,47 +467,6 @@ FocusScope {
                     }
                 }
 
-                // FisheyeCircleViewer: display fisheye circle
-                // Note: use a Loader to evaluate if a PanoramaInit node exist and displayFisheyeCircle checked at runtime
-                ExifOrientedViewer {
-                    anchors.centerIn: parent
-                    orientationTag: imgContainer.orientationTag
-                    xOrigin: imgContainer.width / 2
-                    yOrigin: imgContainer.height / 2
-                    property var activeNode: _reconstruction
-                    active: displayFisheyeCircleLoader.checked && activeNode
-
-                    sourceComponent: CircleGizmo {
-                        width: imgContainer.width
-                        height: imgContainer.height
-
-                        property bool useAuto: activeNode.attribute("estimateFisheyeCircle").value
-                        readOnly: useAuto
-                        visible: (!useAuto) || activeNode.isComputed
-                        property real userFisheyeRadius: activeNode.attribute("fisheyeRadius").value
-                        property variant fisheyeAutoParams: _reconstruction.getAutoFisheyeCircle(activeNode)
-
-                        circleX: useAuto ? fisheyeAutoParams.x : activeNode.attribute("fisheyeCenterOffset.fisheyeCenterOffset_x").value
-                        circleY: useAuto ? fisheyeAutoParams.y : activeNode.attribute("fisheyeCenterOffset.fisheyeCenterOffset_y").value
-
-                        circleRadius: useAuto ? fisheyeAutoParams.z : ((imgContainer.image ? Math.min(imgContainer.image.width, imgContainer.image.height) : 1.0) * 0.5 * (userFisheyeRadius * 0.01))
-
-                        circleBorder.width: Math.max(1, (3.0 / imgContainer.scale))
-                        onMoved: {
-                            if (!useAuto) {
-                                _reconstruction.setAttribute(
-                                    activeNode.attribute("fisheyeCenterOffset"),
-                                    JSON.stringify([xoffset, yoffset])
-                                )
-                            }
-                        }
-                        onIncrementRadius: {
-                            if (!useAuto) {
-                                _reconstruction.setAttribute(activeNode.attribute("fisheyeRadius"), activeNode.attribute("fisheyeRadius").value + radiusOffset)
-                            }
-                        }
-                    }
-                }
             }
 
             ColumnLayout {
@@ -585,54 +544,41 @@ FocusScope {
                             stepSize: 1
                             editable: true
 
-                            // MouseArea for the spin-arrows
                             MouseArea {
-                                id: arrowMouseArea
+                                id: dragMouseArea
                                 anchors.fill: parent
-                                anchors.margins: 2 // Adjust this margin to cover only the spin-arrows
                                 acceptedButtons: Qt.LeftButton
 
-                                property int lastX: 0
-                                property int lastY: 0
+                                property int initialX: 0
+                                property int initialY: 0
                                 property bool isDragging: false
 
                                 onPressed: {
-                                    lastX = mouseX
-                                    lastY = mouseY
-                                    isDragging = true
+                                    initialX = mouseX
+                                    initialY = mouseY
+                                    isDragging = false // Initially false until movement is detected
                                 }
 
                                 onPositionChanged: {
+                                    if (Math.abs(mouseX - initialX) > 5 || Math.abs(mouseY - initialY) > 5) { // Threshold to start drag
+                                        isDragging = true
+                                    }
+
                                     if (isDragging) {
-                                        var deltaX = mouseX - lastX
-                                        var deltaY = mouseY - lastY
-                                        if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                                            // Horizontal movement
-                                            umlaufLaengeSpinBox.value += deltaX > 0 ? 1 : -1
-                                            lastX = mouseX
-                                        } else {
-                                            // Vertical movement
-                                            umlaufLaengeSpinBox.value += deltaY > 0 ? -1 : 1
-                                            lastY = mouseY
-                                        }
+                                        var deltaX = mouseX - initialX
+                                        var deltaY = mouseY - initialY
+
+                                        // Adjust value based on horizontal movement
+                                        umlaufLaengeSpinBox.value += deltaX > 0 ? 1 : -1
+
+                                        // Reset initial positions for continuous movement
+                                        initialX = mouseX
+                                        initialY = mouseY
                                     }
                                 }
 
                                 onReleased: {
                                     isDragging = false
-                                }
-                            }
-
-                            // Separate MouseArea for the input field
-                            MouseArea {
-                                id: inputMouseArea
-                                anchors.left: parent.left
-                                anchors.right: arrowMouseArea.left
-                                anchors.top: parent.top
-                                anchors.bottom: parent.bottom
-
-                                onDoubleClicked: {
-                                    umlaufLaengeSpinBox.selectAll()
                                 }
                             }
 
