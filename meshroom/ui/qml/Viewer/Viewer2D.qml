@@ -384,11 +384,11 @@ FocusScope {
                                 'idView': Qt.binding(function() { return (_reconstruction ? _reconstruction.selectedViewId : -1) }),
                                 'cropFisheye': false,
                                 'targetSize': Qt.binding(function() { return floatImageViewerLoader.targetSize }),
-                                })
-                          } else {
-                                setSource("", {})
-                                fittedOnce = false
-                          }
+                            })
+                        } else {
+                            setSource("", {})
+                            fittedOnce = false
+                        }
                     }
                 }
 
@@ -571,6 +571,74 @@ FocusScope {
 
                     RowLayout {
                         anchors.fill: parent
+
+                        // Label for the number field
+                        Label {
+                            text: "Umlauflänge"
+                            Layout.alignment: Qt.AlignVCenter
+                        }
+
+                        SpinBox {
+                            id: umlaufLaengeSpinBox
+                            from: 0
+                            to: 99999
+                            stepSize: 1
+                            editable: true
+
+                            // MouseArea for the spin-arrows
+                            MouseArea {
+                                id: arrowMouseArea
+                                anchors.fill: parent
+                                anchors.margins: 2 // Adjust this margin to cover only the spin-arrows
+                                acceptedButtons: Qt.LeftButton
+
+                                property int lastX: 0
+                                property int lastY: 0
+                                property bool isDragging: false
+
+                                onPressed: {
+                                    lastX = mouseX
+                                    lastY = mouseY
+                                    isDragging = true
+                                }
+
+                                onPositionChanged: {
+                                    if (isDragging) {
+                                        var deltaX = mouseX - lastX
+                                        var deltaY = mouseY - lastY
+                                        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                                            // Horizontal movement
+                                            umlaufLaengeSpinBox.value += deltaX > 0 ? 1 : -1
+                                            lastX = mouseX
+                                        } else {
+                                            // Vertical movement
+                                            umlaufLaengeSpinBox.value += deltaY > 0 ? -1 : 1
+                                            lastY = mouseY
+                                        }
+                                    }
+                                }
+
+                                onReleased: {
+                                    isDragging = false
+                                }
+                            }
+
+                            // Separate MouseArea for the input field
+                            MouseArea {
+                                id: inputMouseArea
+                                anchors.left: parent.left
+                                anchors.right: arrowMouseArea.left
+                                anchors.top: parent.top
+                                anchors.bottom: parent.bottom
+
+                                onDoubleClicked: {
+                                    umlaufLaengeSpinBox.selectAll()
+                                }
+                            }
+
+                            onValueChanged: alphaChange()
+                        }
+
 
                         // zoom label
                         MLabel {
@@ -802,7 +870,7 @@ FocusScope {
         Component.onCompleted: {
             running = Qt.binding(function() {
                 return (imgContainer.image && imgContainer.image.allImagesLoaded === false)
-                       || (imgContainer.image && imgContainer.image.status === Image.Loading)
+                    || (imgContainer.image && imgContainer.image.status === Image.Loading)
             })
         }
         // disable the visibility when unused to avoid stealing the mouseEvent to the image color picker
