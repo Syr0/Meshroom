@@ -508,42 +508,6 @@ FocusScope {
                         }
                     }
                 }
-
-                // LightingCalibration: display circle
-                ExifOrientedViewer {
-                    anchors.centerIn: parent
-                    orientationTag: imgContainer.orientationTag
-                    xOrigin: imgContainer.width / 2
-                    yOrigin: imgContainer.height / 2
-                    property var activeNode: _reconstruction.activeNodes.get("SphereDetection").node
-                    active: displayLightingCircleLoader.checked && activeNode
-
-                    sourceComponent: CircleGizmo {
-                        width: imgContainer.width
-                        height: imgContainer.height
-
-                        readOnly: false
-
-                        circleX: activeNode.attribute("sphereCenter.x").value
-                        circleY: activeNode.attribute("sphereCenter.y").value
-                        circleRadius: activeNode.attribute("sphereRadius").value
-
-                        circleBorder.width: Math.max(1, (3.0 / imgContainer.scale))
-                        onMoved: {
-                            _reconstruction.setAttribute(
-                                activeNode.attribute("sphereCenter"),
-                                JSON.stringify([xoffset, yoffset])
-                            )
-                        }
-                        onIncrementRadius: {
-                            _reconstruction.setAttribute(activeNode.attribute("sphereRadius"), activeNode.attribute("sphereRadius").value + radiusOffset)
-                        }
-                    }
-                }
-
-                // ColorCheckerViewer: display color checker detection results
-                // note: use a Loader to evaluate if a ColorCheckerDetection node exist and displayColorChecker checked at runtime
-
             }
 
             ColumnLayout {

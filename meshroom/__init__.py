@@ -120,7 +120,6 @@ def setupEnvironment(backend=Backend.STANDALONE):
         qtPluginsDir = os.path.join(rootDir, "qtPlugins")
         sensorDBPath = os.path.join(aliceVisionShareDir, "cameraSensors.db")
         voctreePath = os.path.join(aliceVisionShareDir, "vlfeat_K80L3.SIFT.tree")
-        sphereDetectionModel = os.path.join(aliceVisionShareDir, "sphereDetection_Mask-RCNN.onnx")
         semanticSegmentationModel = os.path.join(aliceVisionShareDir, "fcn_resnet50.onnx")
 
         env = {
