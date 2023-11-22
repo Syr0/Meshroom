@@ -783,52 +783,6 @@ Panel {
                 }
             }
             function open() {
-                if (imageProcessing.checked)
-                    imageProcessing.checked = false
-                _reconstruction.setupTempCameraInit(activeNode, "outSfMData")
-            }
-            function close() {
-                _reconstruction.clearTempCameraInit()
-            }
-        }
-
-        MaterialToolButton {
-            id: imageProcessing
-            Layout.minimumWidth: childrenRect.width
-
-            property var activeNode: _reconstruction ? _reconstruction.activeNodes.get("ImageProcessing").node : null
-            font.pointSize: 15
-            padding: 0
-            ToolTip.text: "Preprocessed Images: " + (activeNode ? activeNode.label : "No Node")
-            text: MaterialIcons.wallpaper
-            visible: activeNode && activeNode.attribute("outSfMData").value
-            enabled: activeNode && activeNode.isComputed
-            property string nodeID: activeNode ? (activeNode.label + activeNode.isComputed) : ""
-            onNodeIDChanged: {
-                if (checked) {
-                    open()
-                }
-            }
-            onEnabledChanged: {
-                // Reset the toggle to avoid getting stuck
-                // with the HDR node checked but disabled.
-                if (checked) {
-                    checked = false
-                    close()
-                }
-            }
-            checkable: true
-            checked: false
-            onClicked: {
-                if (checked) {
-                    open()
-                } else {
-                    close()
-                }
-            }
-            function open() {
-                if (displayHDR.checked)
-                    displayHDR.checked = false
                 _reconstruction.setupTempCameraInit(activeNode, "outSfMData")
             }
             function close() {
