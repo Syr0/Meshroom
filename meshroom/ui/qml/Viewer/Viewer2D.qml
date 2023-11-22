@@ -668,30 +668,6 @@ FocusScope {
                                 if (enabled == false) checked = false
                             }
                         }
-                        MaterialToolButton {
-                            id: displayColorCheckerViewerLoader
-                            property var activeNode: _reconstruction ? _reconstruction.activeNodes.get('ColorCheckerDetection').node : null
-                            ToolTip.text: "Display Color Checker: " + (activeNode ? activeNode.label : "No Node")
-                            text: MaterialIcons.view_comfy //view_module grid_on gradient view_comfy border_all
-                            font.pointSize: 11
-                            Layout.minimumWidth: 0
-                            checkable: true
-                            enabled: activeNode && activeNode.isComputed && _reconstruction.selectedViewId !== -1
-                            checked: false
-                            visible: activeNode
-                            onEnabledChanged: {
-                                if (enabled == false)
-                                    checked = false
-                            }
-                            onCheckedChanged: {
-                                if (checked == true) {
-                                    displaySfmDataGlobalStats.checked = false
-                                    displaySfmStatsView.checked = false
-                                    metadataCB.checked = false
-                                }
-                            }
-                        }
-
 
                         Label {
                             id: resolutionLabel

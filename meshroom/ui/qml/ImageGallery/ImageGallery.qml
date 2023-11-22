@@ -750,46 +750,6 @@ Panel {
             Layout.fillWidth: true
         }
 
-        MaterialToolLabelButton {
-            id: displayHDR
-            Layout.minimumWidth: childrenRect.width
-            property var activeNode: _reconstruction ? _reconstruction.activeNodes.get("LdrToHdrMerge").node : null
-            ToolTip.text: "Visualize HDR images: " + (activeNode ? activeNode.label : "No Node")
-            iconText: MaterialIcons.filter
-            label: activeNode ? activeNode.attribute("nbBrackets").value : ""
-            visible: activeNode
-            enabled: activeNode && activeNode.isComputed && (m.viewpoints ? m.viewpoints.count > 0 : false)
-            property string nodeID: activeNode ? (activeNode.label + activeNode.isComputed) : ""
-            onNodeIDChanged: {
-                if (checked) {
-                    open()
-                }
-            }
-            onEnabledChanged: {
-                // Reset the toggle to avoid getting stuck
-                // with the HDR node checked but disabled.
-                if (checked) {
-                    checked = false
-                    close()
-                }
-            }
-            checkable: true
-            checked: false
-            onClicked: {
-                if (checked) {
-                    open()
-                } else {
-                    close()
-                }
-            }
-            function open() {
-                _reconstruction.setupTempCameraInit(activeNode, "outSfMData")
-            }
-            function close() {
-                _reconstruction.clearTempCameraInit()
-            }
-        }
-
         Item {
             Layout.fillHeight: true
             width: 1
