@@ -19,11 +19,8 @@ FocusScope {
 
     property Component floatViewerComp: Qt.createComponent("FloatImage.qml")
     property var useFloatImageViewer: displayHDR.checked
-    property alias useLensDistortionViewer: displayLensDistortionViewer.checked
-
-    property var activeNodeFisheye: _reconstruction ? _reconstruction.activeNodes.get("PanoramaInit").node : null
-    property bool cropFisheye : activeNodeFisheye ? activeNodeFisheye.attribute("useFisheye").value : false
-    property bool enable8bitViewer: enable8bitViewerAction.checked
+    property alias useLensDistortionViewer: displayLensDistortionViewer.checked // needed
+    property bool enable8bitViewer: enable8bitViewerAction.checked // needed
 
     QtObject {
         id: m
