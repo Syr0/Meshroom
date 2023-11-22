@@ -484,29 +484,6 @@ class Reconstruction(UIGraph):
         if rootNode.nodeType == "CameraInit":
             self.setCameraInitIndex(self._cameraInits.indexOf(rootNode))
 
-    @Slot(QObject, result=QVector3D)
-    def getAutoFisheyeCircle(self, panoramaInit):
-        if not panoramaInit or not panoramaInit.isComputed:
-            return QVector3D(0.0, 0.0, 0.0)
-        if not panoramaInit.attribute("estimateFisheyeCircle").value:
-            return QVector3D(0.0, 0.0, 0.0)
-
-        sfmFile = panoramaInit.attribute('outSfMData').value
-        if not os.path.exists(sfmFile):
-            return QVector3D(0.0, 0.0, 0.0)
-        # skip decoding errors to avoid potential exceptions due to non utf-8 characters in images metadata
-        with open(sfmFile, 'r', encoding='utf-8', errors='ignore') as f:
-            data = json.load(f)
-
-        intrinsics = data.get('intrinsics', [])
-        if len(intrinsics) == 0:
-            return QVector3D(0.0, 0.0, 0.0)
-        intrinsic = intrinsics[0]
-
-        res = QVector3D(float(intrinsic.get("fisheyeCircleCenterX", 0.0)) - float(intrinsic.get("width", 0.0)) * 0.5,
-                        float(intrinsic.get("fisheyeCircleCenterY", 0.0)) - float(intrinsic.get("height", 0.0)) * 0.5,
-                        float(intrinsic.get("fisheyeCircleRadius", 0.0)))
-        return res
 
     def lastSfmNode(self):
         """ Retrieve the last SfM node from the initial CameraInit node. """

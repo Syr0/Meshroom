@@ -477,7 +477,7 @@ FocusScope {
                     orientationTag: imgContainer.orientationTag
                     xOrigin: imgContainer.width / 2
                     yOrigin: imgContainer.height / 2
-                    property var activeNode: _reconstruction ? _reconstruction.activeNodes.get("PanoramaInit").node : null
+                    property var activeNode: _reconstruction
                     active: displayFisheyeCircleLoader.checked && activeNode
 
                     sourceComponent: CircleGizmo {
