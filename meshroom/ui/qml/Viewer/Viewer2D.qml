@@ -546,29 +546,7 @@ FocusScope {
 
                 // ColorCheckerViewer: display color checker detection results
                 // note: use a Loader to evaluate if a ColorCheckerDetection node exist and displayColorChecker checked at runtime
-                ExifOrientedViewer {
-                    id: colorCheckerViewerLoader
-                    anchors.centerIn: parent
-                    orientationTag: imgContainer.orientationTag
-                    xOrigin: imgContainer.width / 2
-                    yOrigin: imgContainer.height / 2
-                    property var activeNode: _reconstruction ? _reconstruction.activeNodes.get("ColorCheckerDetection").node : null
-                    active: (displayColorCheckerViewerLoader.checked && activeNode)
 
-                    sourceComponent: ColorCheckerViewer {
-                        width: imgContainer.width
-                        height: imgContainer.height
-
-                        visible: activeNode.isComputed && json !== undefined && imgContainer.image.status === Image.Ready
-                        source: Filepath.stringToUrl(activeNode.attribute("outputData").value)
-                        viewpoint: _reconstruction.selectedViewpoint
-                        zoom: imgContainer.scale
-
-                        updatePane: function() {
-                            colorCheckerPane.colors = getColors();
-                        }
-                    }
-                }
             }
 
             ColumnLayout {
@@ -753,24 +731,6 @@ FocusScope {
                             }
                         }
 
-                        MaterialToolButton {
-                            id: displayLdrHdrCalibrationGraph
-                            property var activeNode: _reconstruction ? _reconstruction.activeNodes.get("LdrToHdrCalibration").node : null
-                            property bool isComputed: activeNode && activeNode.isComputed
-                            ToolTip.text: "Display Camera Response Function: " + (activeNode ? activeNode.label : "No Node")
-                            text: MaterialIcons.timeline
-                            font.pointSize: 11
-                            Layout.minimumWidth: 0
-                            checkable: true
-                            checked: false
-                            enabled: activeNode && activeNode.isComputed
-                            visible: activeNode
-
-                            onIsComputedChanged: {
-                                if (!isComputed)
-                                    checked = false
-                            }
-                        }
 
                         Label {
                             id: resolutionLabel
